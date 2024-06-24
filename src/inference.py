@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 import os
 import random
 import io
+import copy
 
 import torch
 from torchvision import transforms
@@ -249,7 +250,7 @@ def outputs_to_objects(outputs, img_size, class_idx2name):
 
     return objects
 
-def objects_to_crops(img, tokens, objects, class_thresholds, padding=10):
+def objects_to_crops(img, tokens_original, objects, class_thresholds, padding=10):
     """
     Process the bounding boxes produced by the table detection model into
     cropped table images and cropped tokens.
@@ -257,6 +258,7 @@ def objects_to_crops(img, tokens, objects, class_thresholds, padding=10):
 
     table_crops = []
     for obj in objects:
+        tokens = copy.deepcopy(tokens_original)
         if obj['score'] < class_thresholds[obj['label']]:
             continue
 
